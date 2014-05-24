@@ -13,9 +13,8 @@ RUN \
   apt-get install -y iptables make gcc libevent-dev
 
 # Install redsocks source from git tree
-ADD . /docker
-WORKDIR /docker
+ADD . /usr/src/redsocks
+WORKDIR /usr/src/redsocks
 
-# Compile redsocks
-RUN make
-
+# Compile redsocks and install it in /usr/local/sbin
+RUN make && cp redsocks /usr/local/sbin/redsocks 
