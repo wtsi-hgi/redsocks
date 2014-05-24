@@ -14,5 +14,8 @@ RUN \
 
 # Install redsocks source from git tree
 ADD . /docker
-
 WORKDIR /docker
+
+# Compile redsocks
+RUN make
+
