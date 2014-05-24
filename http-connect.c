@@ -30,6 +30,7 @@
 #include "log.h"
 #include "redsocks.h"
 #include "http-auth.h"
+#include "version.h"
 
 typedef enum httpc_state_t {
 	httpc_new,
@@ -222,18 +223,20 @@ static struct evbuffer *httpc_mkconnect(redsocks_client *client)
 
 	if (auth_string == NULL) {
 		len = evbuffer_add_printf(buff,
-			"CONNECT %s:%u HTTP/1.0\r\n\r\n",
+			"CONNECT %s:%u HTTP/1.0\r\nUser-agent: %s\r\n\r\n",
 			inet_ntoa(client->destaddr.sin_addr),
-			ntohs(client->destaddr.sin_port)
+			ntohs(client->destaddr.sin_port),
+			redsocks_version
 		);
 	} else {
 		len = evbuffer_add_printf(buff,
-			"CONNECT %s:%u HTTP/1.0\r\n%s %s %s\r\n\r\n",
+			"CONNECT %s:%u HTTP/1.0\r\n%s %s %s\r\nUser-agent: %s\r\n\r\n",
 			inet_ntoa(client->destaddr.sin_addr),
 			ntohs(client->destaddr.sin_port),
 			auth_response_header,
 			auth_scheme,
-			auth_string
+			auth_string,
+			redsocks_version
 		);
 	}
 
